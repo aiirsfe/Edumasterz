@@ -72,7 +72,16 @@ async def dl_file(request: Request):
     from utils.directoryHandler import DRIVE_DATA
 
     path = request.query_params["path"]
+    quality = request.query_params.get("quality", "original")  # original, 240p, 360p, 480p
+    
     file = DRIVE_DATA.get_file(path)
+    
+    # Check if a specific quality is requested and available
+    if quality != "original" and hasattr(file, 'encoded_versions') and file.encoded_versions:
+        if quality in file.encoded_versions:
+            encoded_version = file.encoded_versions[quality]
+            # Use the encoded version's message ID
+            return await media_streamer(STORAGE_CHANNEL, encoded_version['message_id'], f"{file.name}_{quality}", request)
     
     # Determine which channel to use for streaming
     if hasattr(file, 'is_fast_import') and file.is_fast_import and file.source_channel:

@@ -55,6 +55,7 @@ class File:
         path: str,
         duration: int = 0,
         source_channel: int = None,
+        encoded_versions: dict = None,
     ) -> None:
         self.name = name
         self.file_id = file_id
@@ -67,6 +68,7 @@ class File:
         self.duration = duration  # Duration in seconds for video files
         self.source_channel = source_channel  # For fast import files
         self.is_fast_import = source_channel is not None
+        self.encoded_versions = encoded_versions or {}  # Store encoded video versions
 
 
 class NewDriveData:
@@ -98,10 +100,10 @@ class NewDriveData:
         self.save()
         return folder.path + folder.id
 
-    def new_file(self, path: str, name: str, file_id: int, size: int, duration: int = 0) -> None:
+    def new_file(self, path: str, name: str, file_id: int, size: int, duration: int = 0, encoded_versions: dict = None) -> None:
         logger.info(f"Creating new file '{name}' in path '{path}'.")
 
-        file = File(name, file_id, size, path, duration)
+        file = File(name, file_id, size, path, duration, encoded_versions=encoded_versions)
         if path == "/":
             directory_folder: Folder = self.contents[path]
             directory_folder.contents[file.id] = file
@@ -484,6 +486,9 @@ async def init_drive_data():
                     item.source_channel = None
                 if not hasattr(item, "is_fast_import"):
                     item.is_fast_import = False
+                # Add encoded versions attribute to existing files if not present
+                if not hasattr(item, "encoded_versions"):
+                    item.encoded_versions = {}
 
     traverse_directory(root_dir)
     DRIVE_DATA.save()

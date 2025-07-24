@@ -7,6 +7,7 @@ from utils.logger import Logger
 from urllib.parse import unquote_plus
 import subprocess
 import json
+from utils.video_encoder import VIDEO_ENCODER
 
 logger = Logger(__name__)
 PROGRESS_CACHE = {}
@@ -128,6 +129,21 @@ async def start_file_uploader(
     ).file_size
 
     filename = unquote_plus(filename)
+
+    # Check if it's a video file and encode to multiple resolutions
+    encoded_versions = {}
+    if is_video_file(filename):
+        logger.info(f"Starting video encoding for {filename}")
+        PROGRESS_CACHE[id] = ("encoding", size, size)
+        
+        try:
+            encoded_versions = await VIDEO_ENCODER.encode_video(
+                file_path, id, filename
+            )
+            logger.info(f"Video encoding completed. Generated {len(encoded_versions)} versions")
+        except Exception as e:
+            logger.error(f"Video encoding failed: {e}")
+            # Continue without encoding if it fails
 
     DRIVE_DATA.new_file(directory_path, filename, message.id, size, duration)
     PROGRESS_CACHE[id] = ("completed", size, size)
