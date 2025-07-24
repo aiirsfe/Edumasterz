@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduMaster Pro - Premium Learning Platform</title>
+    <link rel="stylesheet" href="static/home.css" />
+
+    <!-- Fonts Start -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <!-- Fonts End -->
+</head>
+
+<body>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+        <svg viewBox="0 0 24 24">
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+        </svg>
+    </button>
+
+    <!-- Premium Features Panel -->
+    <div class="premium-features">
+        <button class="feature-toggle" id="feature-toggle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="13,2 3,14 12,14 11,22 21,10 12,10 13,2"/>
+            </svg>
+        </button>
+        <div class="features-panel" id="features-panel">
+            <div class="features-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="13,2 3,14 12,14 11,22 21,10 12,10 13,2"/>
+                </svg>
+                Premium Features
+            </div>
+            <div class="feature-item">
+                <div class="feature-info">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 12l2 2 4-4"/>
+                            <path d="M21 12c.552 0 1-.448 1-1V5c0-.552-.448-1-1-1H3c-.552 0-1 .448-1 1v6c0 .552.448 1 1 1"/>
+                        </svg>
+                    </div>
+                    <div class="feature-text">
+                        <h4>Bulk Selection</h4>
+                        <p>Select multiple files at once</p>
+                    </div>
+                </div>
+                <div class="feature-toggle-switch" id="bulk-select-toggle"></div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-info">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                    </div>
+                    <div class="feature-text">
+                        <h4>Grid View</h4>
+                        <p>Visual grid layout</p>
+                    </div>
+                </div>
+                <div class="feature-toggle-switch" id="grid-view-toggle"></div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-info">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="M21 21l-4.35-4.35"/>
+                        </svg>
+                    </div>
+                    <div class="feature-text">
+                        <h4>Smart Search</h4>
+                        <p>AI-powered search suggestions</p>
+                    </div>
+                </div>
+                <div class="feature-toggle-switch active" id="smart-search-toggle"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <div class="quick-action" id="quick-upload" title="Quick Upload">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7,10 12,15 17,10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+        </div>
+        <div class="quick-action" id="quick-folder" title="New Folder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                <line x1="12" y1="11" x2="12" y2="17"/>
+                <line x1="9" y1="14" x2="15" y2="14"/>
+            </svg>
+        </div>
+        <div class="quick-action" id="quick-search" title="Advanced Search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="M21 21l-4.35-4.35"/>
+                <line x1="11" y1="8" x2="11" y2="14"/>
+                <line x1="8" y1="11" x2="14" y2="11"/>
+            </svg>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Sidebar Start -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        <span class="brand-name">EduMaster</span>
+                        <span class="brand-subtitle">Pro</span>
+                    </div>
+                </div>
+            </div>
+
+            <button id="new-button" class="new-button">
+                <div class="button-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="16"/>
+                        <line x1="8" y1="12" x2="16" y2="12"/>
+                    </svg>
+                </div>
+                <span>Add Content</span>
+            </button>
+
+            <div id="new-upload" class="new-upload">
+                <input id="new-upload-focus" type="text"
+                    style="height: 0px; width: 0px; border: none; position: absolute" readonly />
+                <div id="new-folder-btn" class="upload-option">
+                    <div class="option-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                        </svg>
+                    </div>
+                    <span>New Course Module</span>
+                </div>
+                <div class="divider"></div>
+                <div id="file-upload-btn" class="upload-option">
+                    <div class="option-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7,10 12,15 17,10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                    </div>
+                    <span>Upload Materials</span>
+                </div>
+                <input type="file" id="fileInput" style="height: 0px; width: 0px; border: none; position: absolute" />
+                <div class="divider"></div>
+                <div id="url-upload-btn" class="upload-option">
+                    <div class="option-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                        </svg>
+                    </div>
+                    <span>Import from URL</span>
+                </div>
+                <div class="divider"></div>
+                <div id="smart-bulk-import-btn" class="upload-option">
+                    <div class="option-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 12l2 2 4-4"/>
+                            <path d="M21 12c.552 0 1-.448 1-1V5c0-.552-.448-1-1-1H3c-.552 0-1 .448-1 1v6c0 .552.448 1 1 1"/>
+                            <path d="M3 19h18"/>
+                        </svg>
+                    </div>
+                    <span>🧠 Smart Bulk Import</span>
+                </div>
+            </div>
+
+            <div class="sidebar-menu">
+                <a class="menu-item selected-item" href="/?path=/">
+                    <div class="menu-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                            <polyline points="9,22 9,12 15,12 15,22"/>
+                        </svg>
+                    </div>
+                    <span>Learning Hub</span>
+                </a>
+                <a class="menu-item unselected-item" href="/?path=/trash">
+                    <div class="menu-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3,6 5,6 21,6"/>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        </svg>
+                    </div>
+                    <span>Archive</span>
+                </a>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="upgrade-card">
+                    <div class="upgrade-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="13,2 3,14 12,14 11,22 21,10 12,10 13,2"/>
+                        </svg>
+                    </div>
+                    <div class="upgrade-content">
+                        <h4>Upgrade to Pro</h4>
+                        <p>Unlock unlimited storage and advanced features</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Sidebar End -->
+
+        <div id="bg-blur" class="bg-blur"></div>
+
+        <!-- Create New Folder Start -->
+        <div id="create-new-folder" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Create New Course Module</h3>
+                    <p>Organize your learning materials into structured modules</p>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <label for="new-folder-name">Module Name</label>
+                        <input type="text" id="new-folder-name" placeholder="e.g., Introduction to Web Development" autocomplete="off" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="new-folder-cancel" class="btn btn-secondary">Cancel</button>
+                    <button id="new-folder-create" class="btn btn-primary">Create Module</button>
+                </div>
+            </div>
+        </div>
+        <!-- Create New Folder End -->
+
+        <!-- File / Folder Rename Start -->
+        <div id="rename-file-folder" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Rename Item</h3>
+                    <p>Update the name of your learning material</p>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <label for="rename-name">New Name</label>
+                        <input type="text" id="rename-name" placeholder="Enter new name" autocomplete="off" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="rename-cancel" class="btn btn-secondary">Cancel</button>
+                    <button id="rename-create" class="btn btn-primary">Rename</button>
+                </div>
+            </div>
+        </div>
+        <!-- File / Folder Rename End -->
+
+        <!-- Move/Copy Modal Start -->
+        <div id="move-copy-modal" class="modal">
+            <div class="modal-content large">
+                <div class="modal-header">
+                    <h3 id="move-copy-title">Move Item</h3>
+                    <p>Select destination for your learning material</p>
+                </div>
+                <div class="modal-body">
+                    <div class="folder-tree" id="folder-tree">
+                        <!-- Folder tree will be populated here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="move-copy-cancel" class="btn btn-secondary">Cancel</button>
+                    <button id="move-item-btn" class="btn btn-primary">Move</button>
+                    <button id="copy-item-btn" class="btn btn-success">Copy</button>
+                </div>
+            </div>
+        </div>
+        <!-- Move/Copy Modal End -->
+
+        <!-- Remote Upload Start -->
+        <div id="new-url-upload" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Import from URL</h3>
+                    <p>Import learning materials directly from a URL</p>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <label for="remote-url">Resource URL</label>
+                        <input type="text" id="remote-url" placeholder="https://example.com/resource.pdf" autocomplete="off" />
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" name="single-threaded-toggle" id="single-threaded-toggle">
+                        <label for="single-threaded-toggle">Single Threaded Download</label>
+                        <div class="info-tooltip">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M9,9h0a3,3,0,0,1,6,0c0,2-3,3-3,3"/>
+                                <path d="M12,17h.01"/>
+                            </svg>
+                            <span class="tooltip-text">Use for slower but more reliable downloads</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="remote-cancel" class="btn btn-secondary">Cancel</button>
+                    <button id="remote-start" class="btn btn-primary">Import</button>
+                </div>
+            </div>
+        </div>
+        <!-- Remote Upload End -->
+
+        <!-- Smart Bulk Import Modal Start -->
+        <div id="smart-bulk-import-modal" class="modal">
+            <div class="modal-content large">
+                <div class="modal-header">
+                    <h3>🧠 Smart Bulk Import</h3>
+                    <p>Intelligently import multiple learning materials at once</p>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <label for="smart-bulk-channel">Source Channel</label>
+                        <input type="text" id="smart-bulk-channel" placeholder="Channel username, ID, or message link" autocomplete="off" />
+                    </div>
+                    
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="smart-bulk-start-msg">Start Message ID</label>
+                            <input type="number" id="smart-bulk-start-msg" placeholder="Optional" autocomplete="off" />
+                        </div>
+                        <div class="input-group">
+                            <label for="smart-bulk-end-msg">End Message ID</label>
+                            <input type="number" id="smart-bulk-end-msg" placeholder="Optional" autocomplete="off" />
+                        </div>
+                    </div>
+                    
+                    <div class="radio-group">
+                        <label class="radio-group-label">Import Mode:</label>
+                        <div class="radio-options">
+                            <label class="radio-option">
+                                <input type="radio" name="import-mode" value="auto" checked>
+                                <span class="radio-custom"></span>
+                                <div class="radio-content">
+                                    <span class="radio-title">🧠 Auto-Detect</span>
+                                    <span class="radio-desc">Recommended - Automatically chooses the best method</span>
+                                </div>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="import-mode" value="fast">
+                                <span class="radio-custom"></span>
+                                <div class="radio-content">
+                                    <span class="radio-title">⚡ Fast Import</span>
+                                    <span class="radio-desc">Direct reference without copying</span>
+                                </div>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="import-mode" value="regular">
+                                <span class="radio-custom"></span>
+                                <div class="radio-content">
+                                    <span class="radio-title">📦 Regular Import</span>
+                                    <span class="radio-desc">Copy files to storage channel</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div id="channel-status" class="status-card" style="display: none;">
+                        <!-- Status will be populated here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="smart-bulk-check" class="btn btn-outline">Check Channel</button>
+                    <button id="smart-bulk-cancel" class="btn btn-secondary">Cancel</button>
+                    <button id="smart-bulk-start" class="btn btn-primary">Import</button>
+                </div>
+            </div>
+        </div>
+        <!-- Smart Bulk Import Modal End -->
+
+        <!-- Get Password Start -->
+        <div id="get-password" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Welcome to EduMaster Pro</h3>
+                    <p>Please enter your access credentials to continue</p>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <label for="auth-pass">Access Password</label>
+                        <input type="password" id="auth-pass" placeholder="Enter your password" autocomplete="off" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="pass-login" class="btn btn-primary full-width">Access Platform</button>
+                </div>
+            </div>
+        </div>
+        <!-- Get Password End -->
+
+        <!-- File Uploader Start -->
+        <div id="file-uploader" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>🚀 Uploading Learning Material</h3>
+                    <p>Please wait while we process your content</p>
+                </div>
+                <div class="modal-body">
+                    <div class="upload-info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Filename:</span>
+                            <span id="upload-filename" class="info-value">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">File size:</span>
+                            <span id="upload-filesize" class="info-value">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Status:</span>
+                            <span id="upload-status" class="info-value">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Progress:</span>
+                            <span id="upload-percent" class="info-value">0%</span>
+                        </div>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progress-bar"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="cancel-file-upload" class="btn btn-danger">Cancel Upload</button>
+                </div>
+            </div>
+        </div>
+        <!-- File Uploader End -->
+
+        <!-- Main Content Start -->
+        <div class="main-content">
+            <div class="header">
+                <div class="search-container">
+                    <div class="search-bar advanced-search">
+                        <div class="search-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"/>
+                                <path d="M21 21l-4.35-4.35"/>
+                            </svg>
+                        </div>
+                        <form id="search-form">
+                            <input id="file-search" type="text" placeholder="Search learning materials..." autocomplete="off" />
+                        </form>
+                        <div class="search-suggestions" id="search-suggestions">
+                            <!-- Search suggestions will be populated here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sort Controls -->
+                <div class="sort-controls">
+                    <div class="view-toggle">
+                        <button class="view-btn active" id="list-view-btn" title="List View">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="8" y1="6" x2="21" y2="6"/>
+                                <line x1="8" y1="12" x2="21" y2="12"/>
+                                <line x1="8" y1="18" x2="21" y2="18"/>
+                                <line x1="3" y1="6" x2="3.01" y2="6"/>
+                                <line x1="3" y1="12" x2="3.01" y2="12"/>
+                                <line x1="3" y1="18" x2="3.01" y2="18"/>
+                            </svg>
+                        </button>
+                        <button class="view-btn" id="grid-view-btn" title="Grid View">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="7" height="7"/>
+                                <rect x="14" y="3" width="7" height="7"/>
+                                <rect x="14" y="14" width="7" height="7"/>
+                                <rect x="3" y="14" width="7" height="7"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <select id="sort-by" class="sort-select">
+                        <option value="date">Sort by Date</option>
+                        <option value="name">Sort by Name</option>
+                        <option value="size">Sort by Size</option>
+                    </select>
+                    <button id="sort-order" class="sort-order-btn" data-order="desc" title="Descending">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M7 14l5-5 5 5z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Breadcrumb Navigation -->
+            <div class="breadcrumb-container">
+                <div class="breadcrumb" id="breadcrumb">
+                    <!-- Breadcrumb will be populated here -->
+                </div>
+            </div>
+
+            <!-- File Count Stats -->
+            <div class="stats-container" id="file-count-stats">
+                <!-- File count stats will be populated here -->
+            </div>
+
+            <!-- Bulk Actions -->
+            <div class="bulk-actions" id="bulk-actions">
+                <div class="bulk-info">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 12l2 2 4-4"/>
+                        <path d="M21 12c.552 0 1-.448 1-1V5c0-.552-.448-1-1-1H3c-.552 0-1 .448-1 1v6c0 .552.448 1 1 1"/>
+                    </svg>
+                    <span id="bulk-count">0 items selected</span>
+                </div>
+                <div class="bulk-buttons">
+                    <button class="bulk-btn primary" id="bulk-move">Move</button>
+                    <button class="bulk-btn primary" id="bulk-copy">Copy</button>
+                    <button class="bulk-btn danger" id="bulk-delete">Archive</button>
+                </div>
+            </div>
+
+            <div class="content-area">
+                <div class="content-header">
+                    <h2 class="content-title">Learning Materials</h2>
+                    <p class="content-subtitle">Manage and organize your educational content</p>
+                </div>
+                
+                <div class="directory-container">
+                    <!-- List View -->
+                    <div class="directory-table" id="list-view">
+                        <div class="table-header">
+                            <div class="header-cell name-cell">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14,2 14,8 20,8"/>
+                                    <line x1="16" y1="13" x2="8" y2="13"/>
+                                    <line x1="16" y1="17" x2="8" y2="17"/>
+                                    <polyline points="10,9 9,9 8,9"/>
+                                </svg>
+                                <span>Name</span>
+                            </div>
+                            <div class="header-cell size-cell">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                    <polyline points="3.27,6.96 12,12.01 20.73,6.96"/>
+                                    <line x1="12" y1="22.08" x2="12" y2="12"/>
+                                </svg>
+                                <span>Size</span>
+                            </div>
+                            <div class="header-cell duration-cell">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12,6 12,12 16,14"/>
+                                </svg>
+                                <span>Duration</span>
+                            </div>
+                            <div class="header-cell actions-cell">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="1"/>
+                                    <circle cx="19" cy="12" r="1"/>
+                                    <circle cx="5" cy="12" r="1"/>
+                                </svg>
+                                <span>Actions</span>
+                            </div>
+                        </div>
+                        <div class="table-body" id="directory-data">
+                            <!-- Directory content will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- Grid View -->
+                    <div class="directory-grid" id="grid-view" style="display: none;">
+                        <!-- Grid content will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Main Content End -->
+    </div>
+
+    <script src="static/js/extra.js"></script>
+    <script src="static/js/apiHandler.js"></script>
+    <script src="static/js/sidebar.js"></script>
+    <script src="static/js/fileClickHandler.js"></script>
+    <script src="static/js/sorting.js"></script>
+    <script src="static/js/moveCopy.js"></script>
+    <script src="static/js/breadcrumb.js"></script>
+    <script src="static/js/fileCount.js"></script>
+    <script src="static/js/premiumFeatures.js"></script>
+    <script src="static/js/main.js"></script>
+    <script src="static/js/mobile.js"></script>
+</body>
+
+</html>
