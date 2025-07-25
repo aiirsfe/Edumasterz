@@ -506,3 +506,75 @@ async def check_channel_admin(request: Request):
     except Exception as e:
         logger.error(f"Check channel admin error: {e}")
         return JSONResponse({"status": "error", "message": str(e)})
+
+
+@app.post("/api/encodeVideo")
+async def encode_video(request: Request):
+    """API endpoint for manual video encoding"""
+    from utils.video_encoder import VIDEO_ENCODER
+    
+    data = await request.json()
+    
+    if data["password"] != ADMIN_PASSWORD:
+        return JSONResponse({"status": "Invalid password"})
+    
+    logger.info(f"encodeVideo {data}")
+    
+    try:
+        file_path = data["file_path"]
+        qualities = data["qualities"]  # List of qualities to encode
+        encoding_id = getRandomID()
+        
+        # Start encoding in background
+        asyncio.create_task(
+            VIDEO_ENCODER.encode_video_manual(file_path, qualities, encoding_id)
+        )
+        
+        return JSONResponse({"status": "ok", "encoding_id": encoding_id})
+        
+    except Exception as e:
+        logger.error(f"Error starting video encoding: {e}")
+        return JSONResponse({"status": str(e)})
+
+
+@app.post("/api/getEncodingProgress")
+async def get_encoding_progress(request: Request):
+    """Get encoding progress for a specific encoding job"""
+    from utils.video_encoder import VIDEO_ENCODER
+    
+    data = await request.json()
+    
+    if data["password"] != ADMIN_PASSWORD:
+        return JSONResponse({"status": "Invalid password"})
+    
+    try:
+        encoding_id = data["encoding_id"]
+        progress = VIDEO_ENCODER.get_encoding_progress(encoding_id)
+        return JSONResponse({"status": "ok", "data": progress})
+        
+    except Exception as e:
+        logger.error(f"Error getting encoding progress: {e}")
+        return JSONResponse({"status": str(e)})
+
+
+@app.post("/api/checkVideoEncodingSupport")
+async def check_video_encoding_support(request: Request):
+    """Check if video encoding is supported (FFmpeg available)"""
+    from utils.video_encoder import VIDEO_ENCODER
+    
+    data = await request.json()
+    
+    if data["password"] != ADMIN_PASSWORD:
+        return JSONResponse({"status": "Invalid password"})
+    
+    try:
+        ffmpeg_available = VIDEO_ENCODER.check_ffmpeg()
+        return JSONResponse({
+            "status": "ok", 
+            "ffmpeg_available": ffmpeg_available,
+            "supported_qualities": list(VIDEO_ENCODER.resolutions.keys()) if ffmpeg_available else []
+        })
+        
+    except Exception as e:
+        logger.error(f"Error checking encoding support: {e}")
+        return JSONResponse({"status": str(e)})

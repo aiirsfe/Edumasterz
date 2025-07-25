@@ -490,3 +490,365 @@ async function checkChannel() {
 }
 
 // Smart Bulk Import End
+
+// Video Encoding Start
+
+async function showVideoEncodingModal(filePath, fileName) {
+    // Check encoding support first
+    try {
+        const supportData = {};
+        const supportResponse = await postJson('/api/checkVideoEncodingSupport', supportData);
+        
+        if (supportResponse.status !== 'ok' || !supportResponse.ffmpeg_available) {
+            alert('❌ Video encoding is not available on this server.\n\nFFmpeg is required for video encoding but is not installed or not working properly.');
+            return;
+        }
+        
+        const availableQualities = supportResponse.supported_qualities || [];
+        
+        // Create encoding modal
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.id = 'video-encoding-modal';
+        modal.style.zIndex = '1000';
+        modal.style.opacity = '1';
+        
+        modal.innerHTML = `
+            <div class="modal-content large">
+                <div class="modal-header">
+                    <h3>🎬 Encode Video</h3>
+                    <p>Select quality levels to encode for better streaming performance</p>
+                </div>
+                <div class="modal-body">
+                    <div class="encoding-file-info">
+                        <div class="file-info-item">
+                            <span class="info-label">File:</span>
+                            <span class="info-value">${fileName}</span>
+                        </div>
+                        <div class="file-info-item">
+                            <span class="info-label">Purpose:</span>
+                            <span class="info-value">Optimize for different internet speeds</span>
+                        </div>
+                    </div>
+                    
+                    <div class="quality-selection">
+                        <label class="quality-selection-label">Select Quality Levels to Encode:</label>
+                        <div class="quality-options">
+                            ${availableQualities.map(quality => `
+                                <label class="quality-option">
+                                    <input type="checkbox" name="encoding-quality" value="${quality}">
+                                    <span class="quality-checkbox"></span>
+                                    <div class="quality-info">
+                                        <span class="quality-title">${quality.toUpperCase()}</span>
+                                        <span class="quality-desc">${getQualityDescription(quality)}</span>
+                                    </div>
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="encoding-note">
+                        <div class="note-icon">ℹ️</div>
+                        <div class="note-content">
+                            <strong>Note:</strong> Encoding will create optimized versions for streaming on slow internet connections. 
+                            This process may take several minutes depending on video length and selected qualities.
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="encoding-cancel" class="btn btn-secondary">Cancel</button>
+                    <button id="encoding-start" class="btn btn-primary">🚀 Start Encoding</button>
+                </div>
+            </div>
+        `;
+        
+        // Add styles for encoding modal
+        const style = document.createElement('style');
+        style.textContent = `
+            .encoding-file-info {
+                background: var(--secondary-50);
+                border-radius: var(--radius-lg);
+                padding: var(--space-4);
+                margin-bottom: var(--space-5);
+                border: 1px solid var(--secondary-200);
+            }
+            
+            .file-info-item {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: var(--space-2);
+            }
+            
+            .file-info-item:last-child {
+                margin-bottom: 0;
+            }
+            
+            .quality-selection {
+                margin-bottom: var(--space-5);
+            }
+            
+            .quality-selection-label {
+                display: block;
+                font-weight: 600;
+                color: var(--secondary-800);
+                margin-bottom: var(--space-3);
+                font-size: 0.9rem;
+            }
+            
+            .quality-options {
+                display: flex;
+                flex-direction: column;
+                gap: var(--space-3);
+            }
+            
+            .quality-option {
+                display: flex;
+                align-items: center;
+                gap: var(--space-3);
+                padding: var(--space-4);
+                border: 2px solid var(--secondary-200);
+                border-radius: var(--radius-lg);
+                cursor: pointer;
+                transition: all var(--transition-fast);
+                background: white;
+            }
+            
+            .quality-option:hover {
+                border-color: var(--primary-300);
+                background: var(--primary-50);
+            }
+            
+            .quality-option input[type="checkbox"] {
+                display: none;
+            }
+            
+            .quality-checkbox {
+                width: 20px;
+                height: 20px;
+                border: 2px solid var(--secondary-300);
+                border-radius: var(--radius-md);
+                position: relative;
+                flex-shrink: 0;
+                transition: all var(--transition-fast);
+            }
+            
+            .quality-option input[type="checkbox"]:checked + .quality-checkbox {
+                border-color: var(--primary-500);
+                background: var(--primary-500);
+            }
+            
+            .quality-option input[type="checkbox"]:checked + .quality-checkbox::after {
+                content: '✓';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                color: white;
+                font-weight: bold;
+                font-size: 12px;
+            }
+            
+            .quality-info {
+                flex: 1;
+            }
+            
+            .quality-title {
+                display: block;
+                font-weight: 600;
+                color: var(--secondary-800);
+                margin-bottom: var(--space-1);
+            }
+            
+            .quality-desc {
+                font-size: 0.85rem;
+                color: var(--secondary-600);
+            }
+            
+            .encoding-note {
+                display: flex;
+                gap: var(--space-3);
+                padding: var(--space-4);
+                background: var(--warning-50);
+                border: 1px solid var(--warning-200);
+                border-radius: var(--radius-lg);
+                font-size: 0.9rem;
+            }
+            
+            .note-icon {
+                font-size: 1.2rem;
+                flex-shrink: 0;
+            }
+            
+            .note-content {
+                line-height: 1.5;
+                color: var(--warning-800);
+            }
+            
+            @media (max-width: 768px) {
+                .quality-options {
+                    gap: var(--space-2);
+                }
+                
+                .quality-option {
+                    padding: var(--space-3);
+                }
+                
+                .encoding-note {
+                    padding: var(--space-3);
+                    font-size: 0.8rem;
+                }
+            }
+        `;
+        
+        document.head.appendChild(style);
+        document.body.appendChild(modal);
+        
+        // Show background blur
+        document.getElementById('bg-blur').style.zIndex = '999';
+        document.getElementById('bg-blur').style.opacity = '0.5';
+        
+        // Add event listeners
+        document.getElementById('encoding-cancel').addEventListener('click', closeEncodingModal);
+        document.getElementById('encoding-start').addEventListener('click', () => startVideoEncoding(filePath));
+        
+    } catch (error) {
+        alert('Error checking encoding support: ' + error.message);
+    }
+}
+
+function getQualityDescription(quality) {
+    const descriptions = {
+        '240p': 'Low quality - Perfect for very slow internet (400kbps)',
+        '360p': 'Medium quality - Good for moderate internet (800kbps)',
+        '480p': 'Standard quality - Balanced quality/bandwidth (1.2Mbps)',
+        '720p': 'HD quality - High quality streaming (2.5Mbps)',
+        '1080p': 'Full HD quality - Maximum quality (5Mbps)'
+    };
+    return descriptions[quality] || 'Custom quality level';
+}
+
+function closeEncodingModal() {
+    const modal = document.getElementById('video-encoding-modal');
+    if (modal) {
+        modal.remove();
+    }
+    
+    // Hide background blur
+    document.getElementById('bg-blur').style.opacity = '0';
+    setTimeout(() => {
+        document.getElementById('bg-blur').style.zIndex = '-1';
+    }, 300);
+}
+
+async function startVideoEncoding(filePath) {
+    try {
+        // Get selected qualities
+        const selectedQualities = [];
+        document.querySelectorAll('input[name="encoding-quality"]:checked').forEach(checkbox => {
+            selectedQualities.push(checkbox.value);
+        });
+        
+        if (selectedQualities.length === 0) {
+            alert('Please select at least one quality level to encode.');
+            return;
+        }
+        
+        // Close encoding modal
+        closeEncodingModal();
+        
+        // Start encoding
+        const data = {
+            file_path: filePath,
+            qualities: selectedQualities
+        };
+        
+        const response = await postJson('/api/encodeVideo', data);
+        
+        if (response.status === 'ok') {
+            const encodingId = response.encoding_id;
+            
+            // Show encoding progress modal
+            showEncodingProgressModal(encodingId, selectedQualities);
+        } else {
+            alert('Failed to start encoding: ' + response.status);
+        }
+        
+    } catch (error) {
+        alert('Error starting encoding: ' + error.message);
+    }
+}
+
+function showEncodingProgressModal(encodingId, qualities) {
+    // Show file uploader modal for encoding progress
+    document.getElementById('bg-blur').style.zIndex = '2';
+    document.getElementById('bg-blur').style.opacity = '0.1';
+    document.getElementById('file-uploader').style.zIndex = '3';
+    document.getElementById('file-uploader').style.opacity = '1';
+
+    document.getElementById('upload-filename').innerText = '🎬 Video Encoding';
+    document.getElementById('upload-filesize').innerText = `Qualities: ${qualities.join(', ').toUpperCase()}`;
+    document.getElementById('upload-status').innerText = 'Status: Preparing for encoding...';
+    document.getElementById('upload-percent').innerText = 'Progress: 0%';
+    
+    const progressBar = document.getElementById('progress-bar');
+    progressBar.style.width = '0%';
+    
+    // Update cancel button for encoding
+    const cancelBtn = document.getElementById('cancel-file-upload');
+    cancelBtn.textContent = 'Cancel Encoding';
+    
+    // Monitor encoding progress
+    monitorEncodingProgress(encodingId);
+}
+
+async function monitorEncodingProgress(encodingId) {
+    const interval = setInterval(async () => {
+        try {
+            const response = await postJson('/api/getEncodingProgress', { encoding_id: encodingId });
+            
+            if (response.status === 'ok') {
+                const data = response.data;
+                const progressBar = document.getElementById('progress-bar');
+                
+                if (data.status === 'downloading') {
+                    document.getElementById('upload-status').innerText = 'Status: Downloading video from storage...';
+                    progressBar.style.width = '10%';
+                    document.getElementById('upload-percent').innerText = 'Progress: 10%';
+                    
+                } else if (data.status === 'encoding') {
+                    document.getElementById('upload-status').innerText = 'Status: Encoding video...';
+                    const progress = Math.max(10, Math.min(90, 10 + (data.progress * 0.8)));
+                    progressBar.style.width = progress + '%';
+                    document.getElementById('upload-percent').innerText = `Progress: ${progress.toFixed(1)}%`;
+                    
+                } else if (data.status === 'completed') {
+                    clearInterval(interval);
+                    progressBar.style.width = '100%';
+                    document.getElementById('upload-percent').innerText = 'Progress: 100%';
+                    
+                    const encodedCount = data.encoded_count || 0;
+                    const totalRequested = data.total_requested || 0;
+                    
+                    document.getElementById('upload-status').innerText = `Status: Encoding completed! (${encodedCount}/${totalRequested} qualities)`;
+                    
+                    setTimeout(() => {
+                        alert(`🎬 Video Encoding Completed!\n\n✅ Successfully encoded: ${encodedCount}/${totalRequested} quality levels\n\nThe encoded versions are now available for streaming and will provide better performance on slow internet connections.`);
+                        window.location.reload();
+                    }, 1000);
+                    
+                } else if (data.status === 'error') {
+                    clearInterval(interval);
+                    document.getElementById('upload-status').innerText = 'Status: Encoding failed';
+                    alert('❌ Encoding failed: ' + (data.error || 'Unknown error'));
+                    window.location.reload();
+                }
+            }
+        } catch (error) {
+            clearInterval(interval);
+            alert('Error monitoring encoding progress: ' + error.message);
+            window.location.reload();
+        }
+    }, 3000);
+}
+
+// Video Encoding End

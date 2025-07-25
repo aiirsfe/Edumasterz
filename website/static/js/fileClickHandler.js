@@ -245,6 +245,10 @@ function openMoreButton(div) {
         }
         catch { }
         try {
+            moreDiv.querySelector(`#encode-${id}`).addEventListener('click', encodeVideo)
+        }
+        catch { }
+        try {
             moreDiv.querySelector(`#folder-share-${id}`).addEventListener('click', shareFolder)
         }
         catch { }
@@ -417,6 +421,27 @@ async function shareFile() {
     }
 
     copyTextToClipboard(link)
+}
+
+async function encodeVideo() {
+    const id = this.getAttribute('id').split('-')[1]
+    const fileName = document.getElementById(`more-option-${id}`).getAttribute('data-name').toLowerCase()
+    const filePath = document.getElementById(`more-option-${id}`).getAttribute('data-path') + '/' + id
+    
+    // Close the more options menu first
+    closeMoreBtnFocus.call(this.parentElement.querySelector('.more-options-focus'))
+    
+    // Check if it's a video file
+    const videoExtensions = ['.mp4', '.mkv', '.webm', '.mov', '.avi', '.ts', '.ogv', '.m4v', '.flv', '.wmv', '.3gp', '.mpg', '.mpeg']
+    const isVideo = videoExtensions.some(ext => fileName.endsWith(ext))
+    
+    if (!isVideo) {
+        alert('This feature is only available for video files.')
+        return
+    }
+    
+    // Show encoding modal
+    showVideoEncodingModal(filePath, fileName)
 }
 
 async function shareFolder() {
