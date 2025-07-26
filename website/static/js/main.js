@@ -208,8 +208,8 @@ function showDirectory(data) {
                         </div>
                         <div id="encode-${item.id}" class="more-options-item encode-option" style="display: none;">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="3"/>
-                                <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"/>
+                                <polygon points="23 7 16 12 23 17 23 7"/>
+                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
                             </svg>
                             <span>🎬 Encode Video</span>
                         </div>
@@ -249,6 +249,25 @@ function showDirectory(data) {
     
     // Check encoding support and show encode options for video files
     checkEncodingSupport();
+    
+    // Add event listeners for encode options
+    document.querySelectorAll('.encode-option').forEach(option => {
+        const id = option.id.split('-')[1];
+        option.addEventListener('click', function() {
+            const fileName = document.getElementById(`more-option-${id}`).getAttribute('data-name');
+            const filePath = document.getElementById(`more-option-${id}`).getAttribute('data-path') + '/' + id;
+            
+            // Close the more options menu first
+            const moreOptions = document.getElementById(`more-option-${id}`);
+            const focusElement = moreOptions.querySelector('.more-options-focus');
+            if (focusElement) {
+                focusElement.blur();
+            }
+            
+            // Show encoding modal
+            showVideoEncodingModal(filePath, fileName);
+        });
+    });
 }
 
 // Helper function to check if file is a video
@@ -278,28 +297,38 @@ function formatDuration(duration) {
 // Check if video encoding is supported and show encode options
 async function checkEncodingSupport() {
     try {
-        const data = {};
+        const data = { password: getPassword() };
         const response = await postJson('/api/checkVideoEncodingSupport', data);
         
         if (response.status === 'ok' && response.ffmpeg_available) {
+            logger.info('Video encoding is supported, showing encode options');
+            
             // Show encode options for video files
             document.querySelectorAll('.encode-option').forEach(option => {
                 const id = option.id.split('-')[1];
-                const fileName = document.getElementById(`more-option-${id}`).getAttribute('data-name').toLowerCase();
+                const moreOption = document.getElementById(`more-option-${id}`);
+                if (!moreOption) return;
+                
+                const fileName = moreOption.getAttribute('data-name');
+                if (!fileName) return;
                 
                 // Check if it's a video file
                 const videoExtensions = ['.mp4', '.mkv', '.webm', '.mov', '.avi', '.ts', '.ogv', '.m4v', '.flv', '.wmv', '.3gp', '.mpg', '.mpeg'];
-                const isVideo = videoExtensions.some(ext => fileName.endsWith(ext));
+                const isVideo = videoExtensions.some(ext => fileName.toLowerCase().endsWith(ext));
                 
                 if (isVideo) {
                     option.style.display = 'flex';
+                    console.log(`Showing encode option for video: ${fileName}`);
                 }
             });
+        } else {
+            console.log('Video encoding not supported:', response);
         }
     } catch (error) {
-        console.log('Encoding support check failed:', error);
+        console.error('Encoding support check failed:', error);
     }
 }
+
 document.getElementById('search-form').addEventListener('submit', async (event) => {
     event.preventDefault();
     const query = document.getElementById('file-search').value;

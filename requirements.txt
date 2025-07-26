@@ -10,3 +10,4 @@ techzdl>=1.2.6
 tqdm
 dill
 ffmpeg-python
+subprocess32

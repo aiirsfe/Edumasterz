@@ -496,7 +496,7 @@ async function checkChannel() {
 async function showVideoEncodingModal(filePath, fileName) {
     // Check encoding support first
     try {
-        const supportData = {};
+        const supportData = { password: getPassword() };
         const supportResponse = await postJson('/api/checkVideoEncodingSupport', supportData);
         
         if (supportResponse.status !== 'ok' || !supportResponse.ffmpeg_available) {
@@ -758,6 +758,7 @@ async function startVideoEncoding(filePath) {
         
         // Start encoding
         const data = {
+            password: getPassword(),
             file_path: filePath,
             qualities: selectedQualities
         };
@@ -804,7 +805,10 @@ function showEncodingProgressModal(encodingId, qualities) {
 async function monitorEncodingProgress(encodingId) {
     const interval = setInterval(async () => {
         try {
-            const response = await postJson('/api/getEncodingProgress', { encoding_id: encodingId });
+            const response = await postJson('/api/getEncodingProgress', { 
+                password: getPassword(),
+                encoding_id: encodingId 
+            });
             
             if (response.status === 'ok') {
                 const data = response.data;

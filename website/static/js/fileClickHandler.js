@@ -425,7 +425,7 @@ async function shareFile() {
 
 async function encodeVideo() {
     const id = this.getAttribute('id').split('-')[1]
-    const fileName = document.getElementById(`more-option-${id}`).getAttribute('data-name').toLowerCase()
+    const fileName = document.getElementById(`more-option-${id}`).getAttribute('data-name')
     const filePath = document.getElementById(`more-option-${id}`).getAttribute('data-path') + '/' + id
     
     // Close the more options menu first
@@ -433,7 +433,7 @@ async function encodeVideo() {
     
     // Check if it's a video file
     const videoExtensions = ['.mp4', '.mkv', '.webm', '.mov', '.avi', '.ts', '.ogv', '.m4v', '.flv', '.wmv', '.3gp', '.mpg', '.mpeg']
-    const isVideo = videoExtensions.some(ext => fileName.endsWith(ext))
+    const isVideo = videoExtensions.some(ext => fileName.toLowerCase().endsWith(ext))
     
     if (!isVideo) {
         alert('This feature is only available for video files.')

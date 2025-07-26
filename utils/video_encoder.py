@@ -20,16 +20,37 @@ class VideoEncoder:
             '1080p': {'width': 1920, 'height': 1080, 'bitrate': '5000k', 'audio_bitrate': '192k'}
         }
         self.encoding_progress = {}
+        self.ffmpeg_available = None
     
     def check_ffmpeg(self):
-        """Check if FFmpeg is available"""
+        """Check if FFmpeg is available and install if needed"""
+        if self.ffmpeg_available is not None:
+            return self.ffmpeg_available
+            
         try:
             result = subprocess.run(['ffmpeg', '-version'], capture_output=True, check=True, timeout=10)
             logger.info("FFmpeg is available and working")
+            self.ffmpeg_available = True
             return True
         except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
-            logger.error("FFmpeg not found or not working")
-            return False
+            logger.warning("FFmpeg not found, attempting to install...")
+            
+            # Try to install FFmpeg
+            try:
+                # For Ubuntu/Debian systems
+                subprocess.run(['apt-get', 'update'], check=True, timeout=60)
+                subprocess.run(['apt-get', 'install', '-y', 'ffmpeg'], check=True, timeout=300)
+                
+                # Test again
+                subprocess.run(['ffmpeg', '-version'], capture_output=True, check=True, timeout=10)
+                logger.info("FFmpeg installed successfully")
+                self.ffmpeg_available = True
+                return True
+                
+            except Exception as install_error:
+                logger.error(f"Failed to install FFmpeg: {install_error}")
+                self.ffmpeg_available = False
+                return False
     
     async def get_video_info(self, video_path: str):
         """Get video information using ffprobe"""
@@ -69,7 +90,7 @@ class VideoEncoder:
             client = get_client()
             message = await client.get_messages(STORAGE_CHANNEL, file_id)
             
-            if not message or not message.video and not message.document:
+            if not message or (not message.video and not message.document):
                 raise Exception("Video message not found")
             
             cache_dir = Path("./cache")
