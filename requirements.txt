@@ -11,3 +11,5 @@ tqdm
 dill
 ffmpeg-python
 subprocess32
+yt-dlp
+m3u8
